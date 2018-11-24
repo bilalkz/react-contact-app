@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Contact from "./contact";
-import { Consumer } from "../Context";
+import { Consumer } from "../../Context";
 
 class Contacts extends Component {
   // deleteContact = id => {
