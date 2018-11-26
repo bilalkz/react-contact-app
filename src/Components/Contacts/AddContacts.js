@@ -1,56 +1,102 @@
 import React, { Component } from "react";
-
+import { Consumer } from "../../Context";
+import uuid from "uuid";
+import TextInputGroup from "../layout/TextInputGroup";
 class AddContacts extends Component {
   state = {
     name: "",
     email: "",
-    phone: ""
+    phone: "",
+    errors: {}
   };
-  render() {
+
+  onSubmit = (dispatch, e) => {
+    e.preventDefault();
+
     const { name, email, phone } = this.state;
+
+    //check for errors
+    if (name === "") {
+      this.setState({ errors: { name: "Name is required" } });
+      return;
+    }
+
+    if (email === "") {
+      this.setState({ errors: { email: "Email is required" } });
+      return;
+    }
+
+    if (phone === "") {
+      this.setState({ errors: { phone: "Phone is required" } });
+      return;
+    }
+
+    const newContact = {
+      id: uuid(),
+      name,
+      email,
+      phone
+    };
+
+    dispatch({ type: "ADD_CONTACT", payload: newContact });
+
+    //for clear state
+    this.setState({
+      name: "",
+      email: "",
+      phone: "",
+      errors: {}
+    });
+  };
+  onChange = e => this.setState({ [e.target.name]: e.target.value });
+
+  render() {
+    const { name, email, phone, errors } = this.state;
+
     return (
-      <div className="card mb-3">
-        <div className="card-header">Add Contacts</div>
-        <div className="card-body">
-          <form>
-            <div className="form-group">
-              <label htmlFor="name">Name</label>
-              <input
-                type="text"
-                name="name"
-                className="form-control form-control-lg"
-                placeholder="Enter Name..."
-                value={name}
-              />
+      <Consumer>
+        {value => {
+          const { dispatch } = value;
+          return (
+            <div className="card mb-3">
+              <div className="card-header">Add Contacts</div>
+              <div className="card-body">
+                <form onSubmit={this.onSubmit.bind(this, dispatch)}>
+                  <TextInputGroup
+                    label="Name"
+                    name="name"
+                    value={name}
+                    placeholder="Enter Name..."
+                    onChange={this.onChange}
+                    error={errors.name}
+                  />
+                  <TextInputGroup
+                    label="Email"
+                    name="email"
+                    value={email}
+                    placeholder="Enter Email..."
+                    onChange={this.onChange}
+                    error={errors.email}
+                  />
+                  <TextInputGroup
+                    label="Phone"
+                    name="phone"
+                    value={phone}
+                    placeholder="Enter Phone..."
+                    onChange={this.onChange}
+                    error={errors.phone}
+                  />
+                  <input
+                    type="submit"
+                    value="Add Contact"
+                    className="btn btn-grey btn-block"
+                  />
+                </form>
+              </div>
             </div>
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                name="email"
-                className="form-control form-control-lg"
-                placeholder="Enter Email..."
-                value={email}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="name">Phone</label>
-              <input
-                type="phone"
-                name="phone"
-                className="form-control form-control-lg"
-                placeholder="Enter Phone..."
-                value={phone}
-              />
-            </div>
-            <input
-              type="submit"
-              value="Add Contact"
-              className="btn btn-grey btn-block"
-            />
-          </form>
-        </div>
-      </div>
+          );
+        }}
+      </Consumer>
     );
   }
 }

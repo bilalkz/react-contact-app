@@ -18,7 +18,7 @@ class Contact extends Component {
   };
 
   render() {
-    const { id, name, email, contact } = this.props.contact;
+    const { id, name, email, phone } = this.props.contact;
     const { showContactInfo } = this.state;
 
     return (
@@ -44,7 +44,7 @@ class Contact extends Component {
               {showContactInfo ? (
                 <ul className="list-group">
                   <li className="list-group-item">{email}</li>
-                  <li className="list-group-item">{contact}</li>
+                  <li className="list-group-item">{phone}</li>
                 </ul>
               ) : null}
             </div>
