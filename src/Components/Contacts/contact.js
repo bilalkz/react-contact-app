@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Consumer } from "../../Context";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 class Contact extends Component {
   state = {
@@ -11,10 +13,14 @@ class Contact extends Component {
     this.setState({ showContactInfo: !showContactInfo });
   };
 
-  onDeleteClick = (id, dispatch) => {
+  onDeleteClick = async (id, dispatch) => {
     // this.props.deleteClickHandler();
-    dispatch({ type: "DELETE_CONTACT", payload: id });
-    console.log("clicked");
+    try {
+      await axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`);
+      dispatch({ type: "DELETE_CONTACT", payload: id });
+    } catch (e) {
+      dispatch({ type: "DELETE_CONTACT", payload: id });
+    }
   };
 
   render() {
@@ -39,6 +45,17 @@ class Contact extends Component {
                   style={{ cursor: "pointer", float: "right", color: "red" }}
                   onClick={this.onDeleteClick.bind(this, id, dispatch)}
                 />
+                <Link to={`/contact/edit/${id}`}>
+                  <i
+                    className="fa fa-pencil-square-o"
+                    style={{
+                      cursor: "pointer",
+                      float: "right",
+                      color: "black",
+                      marginRight: "1rem"
+                    }}
+                  />
+                </Link>
               </h4>
 
               {showContactInfo ? (
