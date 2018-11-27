@@ -47,6 +47,9 @@ class AddContacts extends Component {
       phone: "",
       errors: {}
     });
+
+    //redirect to contacts page
+    this.props.history.push("/");
   };
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
@@ -74,6 +77,7 @@ class AddContacts extends Component {
                     label="Email"
                     name="email"
                     value={email}
+                    type="email"
                     placeholder="Enter Email..."
                     onChange={this.onChange}
                     error={errors.email}
